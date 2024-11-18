@@ -28,8 +28,9 @@ void img2col(
             }
         }
     }
-
 }
+
+
 
 void conv2d_img2col_gemm(
     const float* input,
@@ -48,7 +49,7 @@ void conv2d_img2col_gemm(
     img2col(input, new_input, input_width, input_height, kernel_size, output_width, output_height, stride);
     cublasHandle_t handle;
     cublasCreate(&handle);
-    gemm(handle, new_input, kernel, output, output_size, 1, ksize);
+    cublasgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, output_size, 1, ksize, 1.0f, new_input, ksize, kernel, 1, 0.0f, output, 1);
     delete[] new_input;
     cublasDestroy(handle);
 }
